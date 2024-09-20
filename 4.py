@@ -1,39 +1,32 @@
-import time
+from typing import Annotated
 
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import BaseModel
 
 app = FastAPI()
 
-
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    start_time = time.perf_counter()
-    response = await call_next(request)
-    process_time = time.perf_counter() - start_time
-    response.headers["X-Process-Time"] = str(process_time)
-    return response
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-]
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
 
-# allow_origins cannot be set to ['*'] for credentials to be allowed, origins must be specified.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    # allow_origin_regex='https://.*\.example\.org',
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    # expose_headers - Indicate any response headers that should be made accessible to the browser. Defaults to [],
-    # max_age - Sets a maximum time in seconds for browsers to cache CORS responses. Defaults to 600
-)
 
-@app.get("/")
-async def main():
-    return {"message": "Hello World"}
+def fake_decode_token(token):
+    return User(
+        username=token + "fakedecoded", email="john@example.com", full_name="John Doe"
+    )
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = fake_decode_token(token)
+    return user
+
+
+@app.get("/users/me")
+async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
