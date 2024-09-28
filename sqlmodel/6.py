@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, create_engine, Session, select
+from sqlmodel import Field, SQLModel, create_engine, Session, select, Relationship
 
 
 class Team(SQLModel, table=True):
@@ -48,6 +48,18 @@ def create_heroes():
         session.add(hero_deadpond)
         session.add(hero_rusty_man)
         session.add(hero_spider_boy)
+
+        hero_spider_boy.team_id = team_preventers.id
+        session.add(hero_spider_boy)
+        session.commit()
+        session.refresh(hero_spider_boy)
+
+        hero_spider_boy.team_id = None
+        session.add(hero_spider_boy)
+        session.commit()
+        session.refresh(hero_spider_boy)
+
+
         session.commit()
 
 
