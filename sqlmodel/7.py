@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, create_engine, Session, select, Relationship
+from sqlmodel import Field, SQLModel, create_engine, Session, select, Relationship, text
 
 
 class Team(SQLModel, table=True):
@@ -7,6 +7,12 @@ class Team(SQLModel, table=True):
     headquarters: str
 
     heroes: list["Hero"] = Relationship(back_populates="team")
+    heroes: list["Hero"] = Relationship(back_populates="team", cascade_delete=True)
+
+    # to stop sqlalchemy to handle delete or set null and leave it to database to do it:
+    # to tell SQLModel (actually SQLAlchemy) to not delete or update those records (for heroes) before sending the DELETE for the team.
+    # TODO: check what happens for hero instances that we have in variables in code?
+    heroes: list["Hero"] = Relationship(back_populates="team", passive_deletes="all")
 
 
 class Hero(SQLModel, table=True):
@@ -14,9 +20,24 @@ class Hero(SQLModel, table=True):
     name: str = Field(index=True)
     secret_name: str
     age: int | None = Field(default=None, index=True)
-    team_id: int | None = Field(default=None, foreign_key="team.id")
 
+    '''
+    team_id: int | None = Field(default=None, foreign_key="team.id")
     team: Team | None = Relationship(back_populates="heroes")
+    # or to get handled even from database deleting row:
+    team_id: int | None = Field(default=None, foreign_key="team.id", ondelete="CASCADE" ) # can be: CASCADE SET NULL RESTRICT
+    team: Team | None = Relationship(back_populates="heroes")
+    # but we should use both one for database
+    # one for sqlalchemy to delete related objects in memory so:
+    '''
+
+    team_id: int | None = Field(default=None, foreign_key="team.id", ondelete="CASCADE")
+    team: Team | None = Relationship(back_populates="heroes")
+
+    # for set null:
+    # field most have None support
+    team_id: int | None = Field(default=None, foreign_key="team.id", ondelete="SET NULL")
+
 
 
 sqlite_file_name = "database.db"
@@ -27,6 +48,8 @@ engine = create_engine(sqlite_url, echo=True)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
+    with engine.connect() as connection:
+        connection.execute(text("PRAGMA foreign_keys=ON"))  # for SQLite only to support foreignkey
 
 
 
@@ -79,10 +102,50 @@ def create_heroes():
         session.commit()
 
 
+def select_heroes():
+    with Session(engine) as session:
+        result = session.exec(select(Hero).where(Hero.name == "Spider-Boy"))
+        hero_spider_boy = result.one()
+        result = session.exec(select(Team).where(Team.id == hero_spider_boy.team_id))
+        team = result.first()
+        print("Spider-Boy's team:", team)
+        # same as
+        print("Spider-Boy's team again:", hero_spider_boy.team)
+
+
+        result = session.exec(select(Team).where(Team.name == "Preventers"))
+        team_preventers = result.one()
+        print("Preventers heroes:", team_preventers.heroes)
+
+
+def update_heroes():
+    with Session(engine) as session:
+        result = session.exec(select(Hero).where(Hero.name == "Spider-Boy"))
+        hero_spider_boy = result.one()
+        hero_spider_boy.team = None
+        session.add(hero_spider_boy)
+        session.commit()
+
+        session.refresh(hero_spider_boy)
+        print("Spider-Boy without team:", hero_spider_boy)
+
+
+def remove_team_heroes():
+    with Session(engine) as session:
+        team = session.exec(select(Team).where(Team.name == "Wakaland")).one()
+        team.heroes.clear()
+        session.add(team)
+        session.commit()
+        session.refresh(team)
+        print("Team with removed heroes:", team)
+
+
 def main():
     create_db_and_tables()
     create_heroes()
-
+    select_heroes()
+    update_heroes()
+    remove_team_heroes()
 
 if __name__ == "__main__":
     main()
