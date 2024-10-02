@@ -11,3 +11,5 @@ uvicorn==0.30.6
 unicorn==2.1.0
 pydantic-settings==2.5.2
 sqlmodel==0.0.22
+fastapi
+uvicorn[standard]
