@@ -26,6 +26,19 @@ func qStruct() {
 	fmt.Println(vertex{1, 2, []int{1, 2, 3}, qPointer})
 	q := vertex{1, 2, []int{1, 2, 3}, qPointer}
 	q.Q()
+	q.X = 10
+	fmt.Println(q.X)
+	fmt.Println("=============================")
+	var w *vertex
+	w = &q
+	w.Y = 12
+	fmt.Println(w.Y)
+	fmt.Println(q.Y)
+
+	e := &vertex{X: 1}
+	r := *e
+	fmt.Println(e)
+	fmt.Println(r)
 }
 
 func main() {
