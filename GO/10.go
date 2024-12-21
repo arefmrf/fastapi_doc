@@ -41,7 +41,35 @@ func qStruct() {
 	fmt.Println(r)
 }
 
+func Pic(dx, dy int) [][]uint8 {
+	a := make([][]uint8, dy)
+	for y := 0; y < dy; y++ {
+		a[y] = make([]uint8, dx)
+		for x := 0; x < dx; x++ {
+			a[y][x] = uint8((x + y) / 2)
+		}
+	}
+	return a
+}
+
+func Pic2(dx, dy int) [][]uint8 {
+	// Initialize the outer slice
+	var a [][]uint8
+	for y := 0; y < dy; y++ {
+		var row []uint8
+		for x := 0; x < dx; x++ {
+			// Append each value to the row
+			row = append(row, uint8((x+y)/2))
+		}
+		// Append the row to the outer slice
+		a = append(a, row)
+	}
+	return a
+}
+
 func main() {
 	//qPointer()
-	qStruct()
+	//qStruct()
+	fmt.Println(Pic(10, 5))
+	fmt.Println(Pic2(10, 5))
 }

@@ -47,6 +47,7 @@ func xArray() {
 		fmt.Println("index: ", index, "value: ", value)
 	}
 	fmt.Println("======================")
+	// return index
 	for ff := range y {
 		fmt.Println("index: ", ff, "value: ", y[ff])
 	}
