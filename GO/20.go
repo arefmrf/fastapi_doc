@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"https://golang.org/x/exp/constraints"
+	//"https://golang.org/x/exp/constraints"
 )
 
 // ~ means even for types that have int as their underlying type
@@ -16,17 +16,17 @@ type numeric interface {
 	~int | float64
 }
 
-type numeric2 interface {
-	constraints.Integer | constants.Float
-}
+//type numeric2 interface {
+//	constraints.Integer | constants.Float
+//}
 
 func iGenericAdd[T numeric](a, b T) T {
 	return a + b
 }
 
-func iGenericAdd2[T numeric2](a, b T) T {
-	return a + b
-}
+//func iGenericAdd2[T numeric2](a, b T) T {
+//	return a + b
+//}
 
 func main() {
 	fmt.Println(GenericAdd[int](1, 2))
@@ -38,5 +38,5 @@ func main() {
 
 	fmt.Println(iGenericAdd[MyInt](q, w))
 
-	fmt.Println(iGenericAdd2(1, 2))
+	//fmt.Println(iGenericAdd2(1, 2))
 }
