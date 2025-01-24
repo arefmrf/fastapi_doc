@@ -43,7 +43,7 @@ func workWithList() {
 }
 
 func main() {
-	//makeNew()
+	makeNew()
 	//
 	//si := []int{10, 20, 15, -10}
 	//fmt.Println(Index(si, 15))
@@ -51,5 +51,5 @@ func main() {
 	//ss := []string{"foo", "bar", "baz"}
 	//fmt.Println(Index(ss, "hello"))
 
-	workWithList()
+	//workWithList()
 }
