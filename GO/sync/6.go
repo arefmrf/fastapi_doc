@@ -73,3 +73,20 @@ func (c *SyncMapCache) Get(key string) (string, bool) {
 	}
 	return val.(string), true
 }
+
+func (c *SyncMapCache) showAll() {
+	// its not atomic, we most use mutex, if we have range
+	c.data.Range(func(key, value interface{}) bool {
+		fmt.Println(key, value)
+		return true
+	})
+}
+
+func (c *SyncMapCache) IncrementCounter(key string) {
+	// its not atomic, we most use mutex, if we have Load() → Modify → Store()
+	//c.mu.Lock()
+	//defer c.mu.Unlock()
+	val, _ := c.data.Load(key)
+	count := val.(int) + 1
+	c.data.Store(key, count)
+}

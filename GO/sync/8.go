@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	ch1 := make(chan string)
@@ -28,7 +31,23 @@ func main() {
 			fmt.Println(msg1)
 		case msg2 := <-ch4:
 			fmt.Println(msg2)
+			ch4 = nil // makes it never match again, so this case won't work any more
+			//default:
+			//	fmt.Println("Default case")
+			//	break
 		}
+	}
+
+	fmt.Println("-------------------------")
+	fmt.Println("-------------------------")
+	ch5 := make(chan string)
+	go goOne(ch5)
+
+	select {
+	case msg := <-ch5:
+		fmt.Println(msg)
+	case <-time.After(time.Second * 1):
+		fmt.Println("Timeout")
 	}
 
 }
