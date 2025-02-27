@@ -22,6 +22,9 @@ func main() {
 	ch3 := make(chan string)
 	ch4 := make(chan string)
 
+	fmt.Println("-------------------------")
+	fmt.Println("-------------------------")
+
 	go goOne(ch3)
 	go goTwo(ch4)
 
