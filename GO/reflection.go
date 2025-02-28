@@ -43,12 +43,21 @@ func main() {
 	fmt.Println(reflect.TypeOf(interface2).Kind(), reflect.TypeOf(interface2).Size())             // ptr
 	fmt.Println("---------------------------")
 	changeElement()
+	fmt.Println("---------------------------")
 	changeValue()
+	fmt.Println("---------------------------")
+	analyzeStruct()
 }
 
 type RPerson struct {
 	Name string
 	Age  int
+}
+
+type Person4 struct {
+	Name    string
+	Age     int
+	Address string
 }
 
 func changeElement() {
@@ -68,13 +77,8 @@ func changeElement() {
 	fmt.Println("After update:", p)
 }
 
-type Person3 struct {
-	Name string
-	Age  int
-}
-
 func changeValue() {
-	p := Person3{Name: "John", Age: 30}
+	p := RPerson{Name: "John", Age: 30}
 	fmt.Println("Before update:", p)
 
 	v := reflect.ValueOf(&p)
@@ -88,4 +92,18 @@ func changeValue() {
 	}
 
 	fmt.Println("After update:", p)
+}
+
+func analyzeStruct() {
+	p := Person4{Name: "John", Age: 30, Address: "123 Main St."}
+
+	v := reflect.ValueOf(p)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		fmt.Printf("Field %d: %s = %v\n", i, v.Type().Field(i).Name, field.Interface())
+	}
 }
