@@ -14,6 +14,7 @@ func qPointer() {
 	p = &j
 	*p = *p / 37
 	fmt.Println(j)
+	fmt.Println("== func qPointer done ==")
 }
 
 func qStruct() {
@@ -53,6 +54,7 @@ func Pic(dx, dy int) [][]uint8 {
 }
 
 func Pic2(dx, dy int) [][]uint8 {
+	// low optimization
 	// Initialize the outer slice
 	var a [][]uint8
 	for y := 0; y < dy; y++ {
@@ -68,8 +70,10 @@ func Pic2(dx, dy int) [][]uint8 {
 }
 
 func main() {
-	//qPointer()
-	//qStruct()
+	qPointer()
+	fmt.Println("---------------------------")
+	qStruct()
+	fmt.Println("---------------------------")
 	fmt.Println(Pic(10, 5))
 	fmt.Println(Pic2(10, 5))
 }

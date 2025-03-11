@@ -20,7 +20,7 @@ func main() {
 	fmt.Println(reflect.TypeOf(w))          // *reflect.rtype
 	fmt.Println(reflect.TypeOf(name))       // string
 	fmt.Println(reflect.TypeOf(sampleBook)) // main.Book
-	fmt.Println("==============================")
+	fmt.Println("==============================1")
 	var (
 		str                    = "Hello, world!"
 		num                    = 42
@@ -43,14 +43,16 @@ func main() {
 	fmt.Println(reflect.TypeOf(structure).Kind(), reflect.TypeOf(structure).Size())               // struct
 	fmt.Println(reflect.TypeOf(interface1).Kind(), reflect.TypeOf(interface1).Size())             // string
 	fmt.Println(reflect.TypeOf(interface2).Kind(), reflect.TypeOf(interface2).Size())             // ptr
-	fmt.Println("---------------------------")
+	fmt.Println("---------------------------2")
 	changeElement()
-	fmt.Println("---------------------------")
+	fmt.Println("---------------------------3")
 	changeValue()
-	fmt.Println("---------------------------")
+	fmt.Println("---------------------------4")
 	analyzeStruct()
-	fmt.Println("---------------------------")
-	analyzeMethod()
+	fmt.Println("---------------------------5")
+	//analyzeMethod()
+	fmt.Println("---------------------------6")
+	tagging()
 }
 
 type RPerson struct {
@@ -113,6 +115,9 @@ func analyzeStruct() {
 	}
 }
 
+// #######################################################
+// #######################################################
+
 type NativeCommandEngine struct{}
 
 func (nse NativeCommandEngine) Method1() {
@@ -145,5 +150,37 @@ func analyzeMethod() {
 	for scanner.Scan() {
 		nse.callMethodByName(scanner.Text())
 		fmt.Print("$ ")
+	}
+}
+
+// #######################################################
+// #######################################################
+
+type tagPerson struct {
+	Name string `customtag:"myname"`
+	Age  int    `customtag:"myage"`
+}
+
+func tagging() {
+	p := tagPerson{"John", 30}
+
+	t := reflect.TypeOf(p)
+	v := reflect.ValueOf(&p)
+	/*
+		ValueOf provides access to runtime values stored in the struct.
+		Value is useful for retrieving actual data, it does not provide field tags.
+	*/
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem() // Dereference to access struct fields
+	}
+
+	p.Name = "sss"
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		value := v.Field(i)
+
+		tag := field.Tag.Get("customtag")
+
+		fmt.Printf("Field: %s, Value: %v, Tag: %s\n", field.Name, value.Interface(), tag)
 	}
 }

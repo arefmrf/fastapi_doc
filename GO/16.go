@@ -30,7 +30,8 @@ func main() {
 	///////////////////////////////////////
 	var s student
 	fmt.Printf("%+v", s)
-	st := new(student)
+	st := new(student) // Allocated on heap
+	// st := student{}    Usually on stack
 	st.grades = make(map[string]int)
 	st.grades["s"] = 1
 	fmt.Printf("%+v\n", st)

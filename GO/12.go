@@ -19,4 +19,6 @@ func main() {
 	fmt.Println(*b)
 	q, w := xAdd(40, 2, 1, 2, 3, 4)
 	fmt.Println(q, w)
+	q, w = xAdd(40, 2)
+	fmt.Println(q, w)
 }

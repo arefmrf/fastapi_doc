@@ -31,7 +31,7 @@ func main() {
 	}()
 
 	for num := range numChan {
-		fmt.Println(num)
+		fmt.Println("** num: ", num)
 	}
 	fmt.Println("======== ", len(numChan), cap(numChan))
 }

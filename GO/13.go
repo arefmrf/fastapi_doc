@@ -39,6 +39,8 @@ func main() {
 		)
 	}
 
+	fmt.Println("============================")
+	
 	v := Vertex{3, 4}
 	fmt.Println(v.Abs())
 

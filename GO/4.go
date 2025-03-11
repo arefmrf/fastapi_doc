@@ -5,10 +5,9 @@ import "fmt"
 func qq() {
 	//fmt.Printf("%.200f", 1.1-0.3)
 	fmt.Printf("%.5f\n", 1.1-0.3)
-	fmt.Println(float64(10) / float64(3))
-	fmt.Println(float64(10) / float64(3))
-	fmt.Println(10 / 3)
-	fmt.Println(10 % 3)
+	fmt.Println(10 / 3)                   // 3
+	fmt.Println(float64(10) / float64(3)) // 3.3333333333333335
+	fmt.Println(10 % 3)                   // 1
 
 	var i float64 = 1.1
 	i++

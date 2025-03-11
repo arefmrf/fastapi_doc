@@ -34,9 +34,18 @@ func xSlice() {
 	index := 2
 	copy(i[index:], i[index+1:]) // Shift elements left
 	fmt.Println("After removal:", i)
-	i = i[:len(i)-1] // Resize slice
+	i = i[:len(i)-1] // Resize slice, remove last item(duplicated item)
 	fmt.Println("After removal:", i)
 
+}
+
+func GenericRemoveElement[T any](slice []T, index int) []T {
+	if index < 0 || index >= len(slice) {
+		return slice // Return unchanged if index is out of bounds
+	}
+	// Copy elements to the left
+	copy(slice[index:], slice[index+1:]) // Shift left
+	return slice[:len(slice)-1]          // Trim last element
 }
 
 func shareUnderlyingArray(slice1, slice2 []int) bool {
@@ -45,6 +54,21 @@ func shareUnderlyingArray(slice1, slice2 []int) bool {
 	return ptr1 == ptr2
 }
 
+type PersonStruct struct {
+	name string
+	age  int
+}
+
 func main() {
 	xSlice()
+	fmt.Println("=============================")
+	fmt.Println(GenericRemoveElement([]int{1, 2, 3, 4, 5}, 2))
+	fmt.Println(
+		GenericRemoveElement(
+			[]PersonStruct{
+				{"first", 10},
+				{"second", 12},
+				{"third", 17},
+			},
+			1))
 }

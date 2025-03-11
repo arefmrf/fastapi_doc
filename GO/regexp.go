@@ -12,8 +12,8 @@ func main() {
 
 	sampleRegex = regexp.MustCompile("[abc]")
 	match = sampleRegex.Match([]byte("abcd"))
-
 	fmt.Printf("For abcd: %t\n", match)
+
 	match = sampleRegex.Match([]byte("1abc23"))
 	fmt.Printf("For 1abc23: %t\n", match)
 
