@@ -16,9 +16,17 @@ func xSlice() {
 	fmt.Println("len:", len(c), "cap: ", cap(c))
 
 	d := c[0:2]
-	fmt.Println(d)
+	fmt.Println("----- d: ", d, "len:", len(d), "cap: ", cap(d))
 	c[0] = 7
-	fmt.Println(d)
+	fmt.Println("----- d: ", d, "len:", len(d), "cap: ", cap(d))
+	d[0] = 8
+	fmt.Println("----- c: ", c, "len:", len(c), "cap: ", cap(c))
+
+	d = append(d, 1, 2, 3, 4, 5, 6)
+	fmt.Println("----- d: ", d, "len:", len(d), "cap: ", cap(d))
+	fmt.Println("----- c: ", c, "len:", len(c), "cap: ", cap(c))
+	fmt.Println("----- d2:", d[2])
+	fmt.Println("----- c2:", c[2])
 
 	var e [3]int = [3]int{1, 2, 3}
 	f := e[:2]
